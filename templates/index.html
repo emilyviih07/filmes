@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMES 2024</title>
+    <style>
+        h1 {
+            font-size: large;
+            color: black; 
+        }
+        body {
+            background-color: lightblue; 
+            color: black; 
+        }
+        button {
+            font: times;
+            color: white;
+            background-color: blue; 
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            padding: 10px;
+            border: 1px solid black; 
+        }
+        .flash {
+            color: red;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>ADICIONE FILME</h1>
+    <form method="POST" action="/">
+        <input type="text" name="title" placeholder="Nome do filme" required>
+        <input type="text" name="rating" placeholder="Nota do filme (opcional)">
+        <input type="submit" value="Add">
+    </form>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <h1>FILMES CADASTRADOS</h1>
+    <table>
+        {% for movie in movies %} 
+        <tr>
+            <td>
+                {{ movie.title }} 
+            </td>
+            <td>
+                Nota: {{ movie.rating if movie.rating is not none else "N/A" }}
+            </td>
+            <td>
+                <form method="POST" action="./update" style="display: inline">
+                    <input type="hidden" value="{{ movie.title }}" name="oldtitle"> 
+                    <input type="text" value="{{ movie.title }}" name="newtitle" required>
+                    <input type="submit" value="Update">
+                </form>
+            </td>
+            <td>
+                <form method="POST" action="./delete" style="display: inline">
+                    <input type="hidden" value="{{ movie.title }}" name="title"> 
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
